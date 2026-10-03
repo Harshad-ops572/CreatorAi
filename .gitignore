@@ -6,3 +6,4 @@ uploads/
 *.log
 *.tsbuildinfo
 .DS_Store
+.agents/
