@@ -39,6 +39,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const data = await api.login(credentials);
+      if (data?.token) {
+        localStorage.setItem('creatorai_token', data.token);
+      }
       setUser(data.user);
       success(`Welcome back, ${data.user.name}!`);
     } catch (err: any) {
@@ -53,6 +56,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const data = await api.register(userData);
+      if (data?.token) {
+        localStorage.setItem('creatorai_token', data.token);
+      }
       setUser(data.user);
       success(`Account created! Welcome to CreatorAi, ${data.user.name}.`);
     } catch (err: any) {
@@ -67,6 +73,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const data = await api.demoLogin();
+      if (data?.token) {
+        localStorage.setItem('creatorai_token', data.token);
+      }
       setUser(data.user);
       success(`Logged in as demo creator: ${data.user.name}!`);
     } catch (err: any) {
@@ -80,10 +89,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = async () => {
     try {
       await api.logout();
+    } catch (e) {
+      // Ignore
+    } finally {
+      localStorage.removeItem('creatorai_token');
       setUser(null);
       success('Logged out successfully.');
-    } catch (e) {
-      setUser(null);
     }
   };
 
